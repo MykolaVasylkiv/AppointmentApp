@@ -1,27 +1,17 @@
 import React, {useReducer, createContext} from 'react';
+import dayjs from 'dayjs';
+
+import {generateDates, createInitSlots} from '../helpers';
 
 export const SlotContext = createContext();
 
 const initState = {
-  slots: [
-    {
-      id: 1,
-      userName: 'Mykola',
-      email: 'mykola@sdf.sd',
-      phoneNumber: '0502444210',
-    },
-    {
-      id: 2,
-      userName: 'Taras',
-      email: 'taras@sdf.sd',
-      phoneNumber: '0502444210',
-    },
-  ],
+  slots: createInitSlots(generateDates(dayjs(), dayjs().add(2, 'day'))),
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'ADD_SLOT':
+    case 'EDIT_SLOT':
       return {
         slot: [...state.slots, action.payload],
       };

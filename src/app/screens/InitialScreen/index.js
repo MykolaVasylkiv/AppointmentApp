@@ -1,12 +1,12 @@
-import React from 'react';
+import React, {memo} from 'react';
+import PropTypes from 'prop-types';
 import {View, Button} from 'react-native';
 
 import styles from './styles';
 
 const InitialScreen = props => {
-  const navigateTo = screenName => () => props.navigation.push(screenName);
+  const navigateTo = screenName => () => props.navigation.navigate(screenName);
 
-  console.log(props);
   return (
     <View style={styles.container}>
       <Button title="Book Appointments" onPress={navigateTo('Slots')} />
@@ -14,4 +14,8 @@ const InitialScreen = props => {
   );
 };
 
-export default InitialScreen;
+InitialScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
+
+export default memo(InitialScreen);

@@ -1,21 +1,36 @@
-import React, {useContext} from 'react';
-import {View, Text} from 'react-native';
+import React, {useContext, memo} from 'react';
+import PropTypes from 'prop-types';
+
+import {View, SectionList, Text} from 'react-native';
+
+import SlotItem from './SlotItem';
 
 import {SlotContext} from '../../contexts/slots-context';
 
 import styles from './styles';
 
-const Slots = () => {
-  const [store, dispatchSlot] = useContext(SlotContext);
-  console.log(store);
+const Slots = props => {
+  const {navigation} = props;
+  const [{slots}] = useContext(SlotContext);
 
   return (
     <View style={styles.container}>
-      {store.slots.map(({userName, id}) => (
-        <Text key={String(id)}>{userName}</Text>
-      ))}
+      <SectionList
+        sections={slots}
+        keyExtractor={(item, index) => item + index}
+        renderItem={({item}) => (
+          <SlotItem slot={item} navigation={navigation} />
+        )}
+        renderSectionHeader={({section: {title}}) => (
+          <Text style={styles.header}>{title}</Text>
+        )}
+      />
     </View>
   );
 };
 
-export default Slots;
+Slots.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
+
+export default memo(Slots);
