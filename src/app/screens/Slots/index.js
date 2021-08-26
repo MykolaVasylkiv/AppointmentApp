@@ -16,10 +16,10 @@ const Slots = props => {
   return (
     <View style={styles.container}>
       <SectionList
-        sections={slots}
+        sections={slots || []}
         keyExtractor={(item, index) => item + index}
-        renderItem={({item}) => (
-          <SlotItem slot={item} navigation={navigation} />
+        renderItem={({item, section: {id}}) => (
+          <SlotItem slot={{...item, dayId: id}} navigation={navigation}/>
         )}
         renderSectionHeader={({section: {title}}) => (
           <Text style={styles.header}>{title}</Text>

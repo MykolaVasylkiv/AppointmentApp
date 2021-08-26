@@ -1,23 +1,41 @@
 import React, {useReducer, createContext} from 'react';
-import dayjs from 'dayjs';
-
-import {generateDates, createInitSlots} from '../helpers';
 
 export const SlotContext = createContext();
 
-const initState = {
-  slots: createInitSlots(generateDates(dayjs(), dayjs().add(2, 'day'))),
-};
+const initState = async () => ({
+  slots: [],
+});
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'EDIT_SLOT':
+    case 'SET_INIT_DATA':
       return {
-        slot: [...state.slots, action.payload],
+        slots: action.payload,
       };
-    case 'REMOVE_SLOT':
+    case 'EDIT_SLOT':
+      const {payload} = action;
+      const getUpdatedSlots = () => {
+        return state.slots.map(day => {
+          if (day.id === payload.dayId) {
+            return {
+              ...day,
+              data: day.data.map(slot => {
+                if (slot.slotId === payload.slotId) {
+                  return {
+                    ...slot,
+                    userInfo: {...slot.userInfo, ...payload.data},
+                  };
+                }
+                return slot;
+              }),
+            };
+          }
+          return day;
+        });
+      };
+
       return {
-        slot: state.slots.filter(todo => todo.id !== action.payload),
+        slots: getUpdatedSlots(),
       };
     default:
       throw new Error();
